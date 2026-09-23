@@ -1,0 +1,32 @@
+{
+    "dataworkspace.excludedProjects": [
+        "victorious/victorious.sqlproj"
+    ],
+    "sqltools.connections": [
+        {
+            "connectionTimeout": 15,
+            "mssqlOptions": {
+                "appName": "SQLTools",
+                "useUTC": true,
+                "encrypt": true,
+                "trustServerCertificate": true
+            },
+            "ssh": "Disabled",
+            "previewLimit": 50,
+            "server": "MPOFU_RESIDENCE\\MSSQLSERVER01",
+            "port": 1433,
+            "driver": "MSSQL",
+            "name": "PortfolioDB",
+            "database": "portfolio_db1",
+            "username": "sa",
+            "password": "Mpofu@20"
+        }
+    ],
+    "python-envs.pythonProjects": [
+        {
+            "path": "populate.py",
+            "envManager": "ms-python.python:venv",
+            "packageManager": "ms-python.python:pip"
+        }
+    ]
+}

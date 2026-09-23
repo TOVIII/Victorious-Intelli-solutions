@@ -1,0 +1,114 @@
+import pyodbc
+import random
+from datetime import datetime, timedelta
+
+# Connect to SQL Server using Windows Authentication
+conn = pyodbc.connect(
+    "Driver={SQL Server};"
+    "Server=localhost;"
+    "Database=portfolio_db1;"
+    "Trusted_Connection=yes;"
+)
+cursor = conn.cursor()
+
+# Helper: random date generator
+def random_date(start_year=2020, end_year=2026):
+    start = datetime(start_year, 1, 1)
+    end = datetime(end_year, 12, 31)
+    return start + (end - start) * random.random()
+
+# -------------------------
+# CASE STUDIES
+# -------------------------
+for i in range(1, 51):
+    industry = random.choice(["Agriculture","Finance","Retail","Health","Manufacturing","Energy","Logistics"])
+    cursor.execute("""
+        INSERT INTO case_studies (case_id, industry, title, description, start_date, end_date)
+        VALUES (?, ?, ?, ?, ?, ?)
+    """, i, industry, f"{industry} Case {i}", f"Description for {industry} project {i}",
+       random_date(2020,2023).date(), random_date(2024,2026).date())
+
+# -------------------------
+# CROPS (Agriculture)
+# -------------------------
+for i in range(1, 5001):
+    cursor.execute("""
+        INSERT INTO crops (crop_id, case_id, crop_name, yield_per_hectare, season, year)
+        VALUES (?, ?, ?, ?, ?, ?)
+    """, i, random.randint(1,50), random.choice(["Maize","Wheat","Soybeans"]),
+       round(random.uniform(2.5, 6.0),2), random.choice(["Summer","Winter"]),
+       random.choice([2024,2025,2026]))
+
+# -------------------------
+# TRANSACTIONS (Finance)
+# -------------------------
+for i in range(1, 5001):
+    cursor.execute("""
+        INSERT INTO transactions (txn_id, case_id, customer_id, amount, txn_date, fraud_flag)
+        VALUES (?, ?, ?, ?, ?, ?)
+    """, i, random.randint(1,50), random.randint(1000,9999),
+       round(random.uniform(50,5000),2), random_date().date(),
+       random.choice([0,1]))
+
+# -------------------------
+# SALES (Retail)
+# -------------------------
+for i in range(1, 5001):
+    cursor.execute("""
+        INSERT INTO sales (sale_id, case_id, product_id, store_id, sale_date, quantity, revenue)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
+    """, i, random.randint(1,50), random.randint(100,999),
+       random.randint(1,50), random_date().date(),
+       random.randint(1,20), round(random.uniform(100,2000),2))
+
+# -------------------------
+# PATIENTS (Health)
+# -------------------------
+for i in range(1, 5001):
+    cursor.execute("""
+        INSERT INTO patients (patient_id, case_id, age, diagnosis, treatment, visit_date)
+        VALUES (?, ?, ?, ?, ?, ?)
+    """, i, random.randint(1,50), random.randint(1,90),
+       random.choice(["Diabetes","Hypertension","Asthma","Flu"]),
+       random.choice(["Medication","Therapy","Surgery"]),
+       random_date().date())
+
+# -------------------------
+# PRODUCTION KPIs (Manufacturing)
+# -------------------------
+for i in range(1, 5001):
+    cursor.execute("""
+        INSERT INTO production_kpis (kpi_id, case_id, plant_id, product_line, units_produced, defect_rate, report_date)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
+    """, i, random.randint(1,50), random.randint(1,20),
+       random.choice(["Electronics","Automotive","Textiles"]),
+       random.randint(100,10000), round(random.uniform(0.1,5.0),2),
+       random_date().date())
+
+# -------------------------
+# SMART GRID (Energy)
+# -------------------------
+for i in range(1, 5001):
+    cursor.execute("""
+        INSERT INTO smart_grid (record_id, case_id, region, consumption_kwh, renewable_share, record_date)
+        VALUES (?, ?, ?, ?, ?, ?)
+    """, i, random.randint(1,50), random.choice(["North","South","East","West"]),
+       round(random.uniform(1000,50000),2), round(random.uniform(10,80),2),
+       random_date().date())
+
+# -------------------------
+# DELIVERIES (Logistics)
+# -------------------------
+for i in range(1, 5001):
+    cursor.execute("""
+        INSERT INTO deliveries (delivery_id, case_id, route_id, vehicle_id, delivery_date, fuel_used, on_time)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
+    """, i, random.randint(1,50), random.randint(1,100),
+       random.randint(1,50), random_date().date(),
+       round(random.uniform(10,200),2), random.choice([0,1]))
+
+# Commit all inserts
+conn.commit()
+conn.close()
+
+print("Synthetic data inserted successfully into portfolio_db1!")
